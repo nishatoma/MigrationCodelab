@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -109,10 +110,15 @@ class PlantDetailFragment : Fragment() {
             }
 
             // Add compose view
-            composeView.setContent {
+            composeView.apply {
+                // Set compose view strategy so that we only detach
+                // The compose view when the view lifecycle owner is destroyed
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 // We are in the compose world now!!
-                MaterialTheme {
-                    PlantDetailDescription(plantDetailViewModel)
+                setContent {
+                    MaterialTheme {
+                        PlantDetailDescription(plantDetailViewModel)
+                    }
                 }
             }
         }
